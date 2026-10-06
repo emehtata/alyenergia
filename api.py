@@ -108,5 +108,8 @@ class AlyenergiaApi:
 def _cost(value: Any) -> float:
     if not value:
         return 0.0
-    item = value[-1] if isinstance(value, list) else value
-    return float(item.get("invoiceAccumulationWithTransferInEur", item.get("invoiceAccumulationInEur", 0)))
+    items = value if isinstance(value, list) else [value]
+    return sum(
+        float(item.get("invoiceAccumulationWithTransferInEur", item.get("invoiceAccumulationInEur", 0)))
+        for item in items
+    )
