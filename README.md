@@ -2,6 +2,8 @@
 
 Home Assistant custom integration for the Vihrea Alyenergia customer portal.
 
+This is an unofficial community integration. It is not affiliated with or supported by Vihrea Alyenergia, and it is provided without warranty.
+
 The integration retrieves consumption, billing, and invoice data from the Alyenergia portal. Spot prices are intentionally not included because they are already available through the Nordpool integration.
 
 ## Installation
