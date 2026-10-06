@@ -1,13 +1,16 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Any
 from urllib.parse import quote
+from zoneinfo import ZoneInfo
 
 import aiohttp
 import json
 
 from .const import API_URL
+
+_HELSINKI = ZoneInfo("Europe/Helsinki")
 
 
 class AlyenergiaApi:
@@ -62,7 +65,7 @@ class AlyenergiaApi:
         object_data = objects[0]
         object_id = object_data["id"]
         contract_id = object_data["synerallContractId"]
-        now = datetime.now(timezone.utc)
+        now = datetime.now(_HELSINKI)
         month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
         if month_start.month == 1:
             previous_start = month_start.replace(year=month_start.year - 1, month=12)
@@ -86,10 +89,10 @@ class AlyenergiaApi:
                 )
                 daily_consumption[date] = daily_consumption.get(date, 0.0) + float(reading.get("kwh", 0))
         latest_reported_date = max(daily_consumption, default=None)
-        current_cost = _cost(invoice_current)
-        previous_cost = _cost(invoice_previous)
         current_kwh = float(current.get("totalConsumption", 0))
         previous_kwh = float(previous.get("totalConsumption", 0))
+        current_cost = _cost(invoice_current)
+        previous_cost = _cost(invoice_previous)
         latest_invoice = max(invoices, key=lambda item: item.get("IssuedDate", "")) if invoices else {}
         return {
             "latest_daily_consumption": daily_consumption.get(latest_reported_date) if latest_reported_date else None,
@@ -109,7 +112,4 @@ def _cost(value: Any) -> float:
     if not value:
         return 0.0
     items = value if isinstance(value, list) else [value]
-    return sum(
-        float(item.get("invoiceAccumulationWithTransferInEur", item.get("invoiceAccumulationInEur", 0)))
-        for item in items
-    )
+    return sum(float(item.get("invoiceAccumulationInEur", 0)) for item in items)
