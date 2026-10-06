@@ -1,0 +1,17 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Vihreä Älyenergia",
+        "description": "Syötä Vihreä Älyenergian portaalin kirjautumistiedot.",
+        "data": {
+          "username": "Sähköposti",
+          "password": "Salasana"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Virheelliset kirjautumistiedot"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Vihrea Alyenergia",
+        "description": "Enter your Vihrea Alyenergia portal credentials.",
+        "data": {
+          "username": "Email",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid authentication"
+    }
+  }
+}
