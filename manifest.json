@@ -3,7 +3,7 @@
   "name": "Vihrea Alyenergia",
   "version": "0.1.0",
   "config_flow": true,
-  "documentation": "https://portal.alyenergia.fi/",
+  "documentation": "https://github.com/emehtata/alyenergia",
   "requirements": [],
   "dependencies": [],
   "codeowners": [],
