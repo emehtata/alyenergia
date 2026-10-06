@@ -9,7 +9,7 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import AlyenergiaApi
-from .const import CONF_PASSWORD, CONF_REFRESH_TOKEN, CONF_USERNAME, DEFAULT_SCAN_INTERVAL, DOMAIN
+from .const import CONF_PASSWORD, CONF_REFRESH_TOKEN, CONF_USERNAME, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ class AlyenergiaCoordinator(DataUpdateCoordinator[dict]):
             entry.data[CONF_PASSWORD],
             entry.data.get(CONF_REFRESH_TOKEN),
         )
-        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=datetime.timedelta(seconds=DEFAULT_SCAN_INTERVAL))
+        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=datetime.timedelta(days=1))
 
     async def _async_update_data(self) -> dict:
         try:
