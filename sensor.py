@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import date
+
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorStateClass
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -17,7 +19,8 @@ SENSORS = (
     ("previous_consumption", "Previous month consumption", "kWh", SensorDeviceClass.ENERGY, SensorStateClass.TOTAL),
     ("previous_cost", "Previous month cost", "EUR", SensorDeviceClass.MONETARY, None),
     ("previous_mean_price", "Previous month mean price", "EUR/kWh", None, SensorStateClass.MEASUREMENT),
-    ("latest_consumption", "Latest reported consumption", "kWh", SensorDeviceClass.ENERGY, None),
+    ("latest_daily_consumption", "Latest reported day consumption", "kWh", SensorDeviceClass.ENERGY, None),
+    ("latest_reported_date", "Latest reported day", None, SensorDeviceClass.DATE, None),
     ("latest_invoice_balance", "Latest invoice balance", "EUR", SensorDeviceClass.MONETARY, None),
 )
 
@@ -41,7 +44,8 @@ class AlyenergiaSensor(CoordinatorEntity[AlyenergiaCoordinator], SensorEntity):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get(self._key) if self.coordinator.data else None
+        value = self.coordinator.data.get(self._key) if self.coordinator.data else None
+        return date.fromisoformat(value) if self._key == "latest_reported_date" and value else value
 
     @property
     def device_info(self) -> DeviceInfo:

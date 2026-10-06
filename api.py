@@ -78,19 +78,25 @@ class AlyenergiaApi:
         invoice_current = await self._query("objects.getInvoiceAccumulation", {"objectId": object_id, "from": month_start.isoformat(), "to": now.isoformat(), "isSpotMargin": is_spot_margin, "price": price, "groupBy": "month"})
         invoice_previous = await self._query("objects.getInvoiceAccumulation", {"objectId": object_id, "from": previous_start.isoformat(), "to": previous_end.isoformat(), "isSpotMargin": is_spot_margin, "price": price, "groupBy": "month"})
         invoices = await self._query("synerall.invoices", {"contractId": contract_id})
-        latest_reading = max(
-            current.get("groupedData", []),
-            key=lambda item: item.get("localTime", {}).get("unix", 0),
-            default={},
-        )
+        daily_consumption: dict[str, float] = {}
+        for period in (previous, current):
+            for reading in period.get("groupedData", []):
+                local_time = reading.get("localTime", {})
+                date = "{year:04d}-{month:02d}-{day:02d}".format(
+                    year=int(local_time.get("year", 0)),
+                    month=int(local_time.get("month", 0)),
+                    day=int(local_time.get("day", 0)),
+                )
+                daily_consumption[date] = daily_consumption.get(date, 0.0) + float(reading.get("kwh", 0))
+        latest_reported_date = max(daily_consumption, default=None)
         current_cost = _cost(invoice_current)
         previous_cost = _cost(invoice_previous)
         current_kwh = float(current.get("totalConsumption", 0))
         previous_kwh = float(previous.get("totalConsumption", 0))
         latest_invoice = max(invoices, key=lambda item: item.get("IssuedDate", "")) if invoices else {}
         return {
-            "latest_consumption": latest_reading.get("kwh"),
-            "latest_consumption_timestamp": latest_reading.get("StartHourUTC"),
+            "latest_daily_consumption": daily_consumption.get(latest_reported_date) if latest_reported_date else None,
+            "latest_reported_date": latest_reported_date,
             "current_consumption": current_kwh,
             "current_cost": current_cost,
             "current_mean_price": current_cost / current_kwh if current_kwh else None,
