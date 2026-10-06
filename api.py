@@ -57,7 +57,8 @@ class AlyenergiaApi:
 
     async def async_data(self) -> dict[str, Any]:
         user = await self._query("user.currentUser", {})
-        objects = await self._query("user.getObjects", {"userId": user["id"]})
+        account = user.get("user", user)
+        objects = await self._query("user.getObjects", {"userId": account["id"]})
         if not objects:
             raise ValueError("No electricity object found")
         object_data = objects[0]

@@ -26,7 +26,16 @@ class AlyenergiaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             except (aiohttp.ClientError, KeyError, ValueError):
                 errors["base"] = "invalid_auth"
             else:
-                await self.async_set_unique_id(str(user["id"]))
+                account = user.get("user", user)
+                account_id = account.get("id")
+                if account_id is None:
+                    errors["base"] = "invalid_auth"
+                    return self.async_show_form(
+                        step_id="user",
+                        data_schema=vol.Schema({vol.Required(CONF_USERNAME): str, vol.Required(CONF_PASSWORD): vol.All(str, vol.Length(min=1))}),
+                        errors=errors,
+                    )
+                await self.async_set_unique_id(str(account_id))
                 self._abort_if_unique_id_configured()
                 return self.async_create_entry(
                     title="Vihrea Alyenergia",
