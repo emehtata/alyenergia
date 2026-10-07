@@ -8,10 +8,18 @@ The integration retrieves consumption, billing, and invoice data from the Alyene
 
 ## Installation
 
+### HACS
+
+1. In HACS, open **Integrations** and search for **Vihrea Alyenergia**.
+2. Install the integration.
+3. Restart Home Assistant.
+4. Open **Settings > Devices & services**.
+5. Select **Add integration** and search for **Vihrea Alyenergia**.
+6. Enter your Alyenergia portal email address and password.
+
 ### Manual installation
 
-1. Download or clone this repository.
-2. Copy the `custom_components/alyenergia` directory into your Home Assistant `config/custom_components` directory:
+Copy `custom_components/alyenergia/` from this repository into your Home Assistant `config/custom_components/` directory:
 
    ```text
    config/
@@ -19,19 +27,7 @@ The integration retrieves consumption, billing, and invoice data from the Alyene
        └── alyenergia/
    ```
 
-3. Restart Home Assistant.
-4. Open **Settings > Devices & services**.
-5. Select **Add integration** and search for **Vihrea Alyenergia**.
-6. Enter your Alyenergia portal email address and password.
-
-### HACS
-
-1. Open HACS and go to **Integrations**.
-2. Open the menu in the top-right corner and select **Custom repositories**.
-3. Add `https://github.com/emehtata/alyenergia` as an **Integration** repository.
-4. Install **Vihrea Alyenergia**.
-5. Restart Home Assistant.
-6. Add the integration from **Settings > Devices & services**.
+Restart Home Assistant, then add the integration from **Settings > Devices & services**.
 
 ## Sensors
 
